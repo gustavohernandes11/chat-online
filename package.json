@@ -3,7 +3,9 @@
 	"version": "1.0.0",
 	"description": "Backend to a real time chat with Node.js and WebSocket.io",
 	"main": "index.js",
-	"devDependencies": {},
+	"devDependencies": {
+		"typescript": "^5.4.5"
+	},
 	"scripts": {
 		"test": "jest"
 	},
