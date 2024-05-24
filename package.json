@@ -1,0 +1,12 @@
+{
+	"name": "chat-backend",
+	"version": "1.0.0",
+	"description": "Backend to a real time chat with Node.js and WebSocket.io",
+	"main": "index.js",
+	"devDependencies": {},
+	"scripts": {
+		"test": "jest"
+	},
+	"author": "Gustavo Hernandes da Silva",
+	"license": "ISC"
+}
