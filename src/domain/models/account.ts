@@ -1,9 +1,9 @@
-export type IAccountModel = {
+export interface IAccountModel {
 	id: string;
 	name: string;
 	email: string;
-	createdAt: string;
-};
+	password: string;
+}
 
 export type IAddAccountModel = {
 	name: string;
