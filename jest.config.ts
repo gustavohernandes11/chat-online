@@ -12,8 +12,7 @@ const config: Config = {
 	clearMocks: true,
 	collectCoverage: false,
 	transformIgnorePatterns: ["\\\\node_modules\\\\"],
-	// preset: "@shelf/jest-mongodb",
-
+	preset: "@shelf/jest-mongodb",
 	moduleNameMapper: {
 		"@/(.*)": "<rootDir>/src/$1",
 	},
