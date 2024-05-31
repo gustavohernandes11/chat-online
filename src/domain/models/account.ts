@@ -9,5 +9,6 @@ export type IAddAccountModel = {
 	name: string;
 	email: string;
 	password: string;
-	passwordConfirmation: string;
 };
+
+export type IAccountId = { id: string };

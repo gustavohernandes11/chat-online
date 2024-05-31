@@ -3,7 +3,7 @@ export type IAuthenticationModel = {
 	password: string;
 };
 
-export type IAuthenticationResponse = {
+export type IAuthenticationResult = {
 	accessToken: string;
 	email: string;
 };

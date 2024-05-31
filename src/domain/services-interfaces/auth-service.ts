@@ -1,19 +1,15 @@
 import { IAccountModel, IAddAccountModel } from "../models/account";
 import {
 	IAuthenticationModel,
-	IAuthenticationResponse,
+	IAuthenticationResult,
 } from "../models/authentication";
 
-export interface IAuthService extends IRegister, IAuth, IVerifyToken {}
+export interface IAuthService extends IRegisterAccount, IAuth {}
 
-export type IRegister = {
-	register(account: IAddAccountModel): Promise<IAccountModel>;
+export type IRegisterAccount = {
+	register(account: IAddAccountModel): Promise<boolean>;
 };
 
 export type IAuth = {
-	auth(login: IAuthenticationModel): Promise<IAuthenticationResponse>;
-};
-
-export type IVerifyToken = {
-	verifyToken(login: IAuthenticationModel): Promise<IAuthenticationResponse>;
+	auth(login: IAuthenticationModel): Promise<IAuthenticationResult | null>;
 };
