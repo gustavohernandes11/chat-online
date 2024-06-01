@@ -1,28 +1,28 @@
-import { IMessage } from "../models/message";
+import { IMessage } from "../models/message"
 
 export interface IConversationRepository
-	extends ICreateNewConversationRepository,
-		IRemoveConversationRepository,
-		ICheckConversationByIdRepository,
-		ICheckMessageByIdRepository,
-		IGetAllMessagesRepository {}
+    extends ICreateNewConversationRepository,
+        IRemoveConversationRepository,
+        ICheckConversationByIdRepository,
+        ICheckMessageByIdRepository,
+        IGetAllMessagesRepository {}
 
 export type ICreateNewConversationRepository = {
-	createNewConversation(): Promise<string>;
-};
+    createNewConversation(): Promise<string>
+}
 
 export type IRemoveConversationRepository = {
-	removeConversation(): Promise<boolean>;
-};
+    removeConversation(): Promise<boolean>
+}
 
 export type ICheckConversationByIdRepository = {
-	checkConversationById(id: string): Promise<boolean>;
-};
+    checkConversationById(id: string): Promise<boolean>
+}
 
 export type ICheckMessageByIdRepository = {
-	checkMessageById(id: string): Promise<boolean>;
-};
+    checkMessageById(id: string): Promise<boolean>
+}
 
 export type IGetAllMessagesRepository = {
-	getAllMessages(conversationId: string): Promise<IMessage[]>;
-};
+    getAllMessages(conversationId: string): Promise<IMessage[]>
+}

@@ -1,14 +1,14 @@
 export interface IAccountModel {
-	id: string;
-	name: string;
-	email: string;
-	password: string;
+    id: string
+    name: string
+    email: string
+    password: string
 }
 
 export type IAddAccountModel = {
-	name: string;
-	email: string;
-	password: string;
-};
+    name: string
+    email: string
+    password: string
+}
 
-export type IAccountId = { id: string };
+export type IAccountId = { id: string }

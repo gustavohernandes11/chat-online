@@ -1,9 +1,9 @@
 export type IAuthenticationModel = {
-	email: string;
-	password: string;
-};
+    email: string
+    password: string
+}
 
 export type IAuthenticationResult = {
-	accessToken: string;
-	email: string;
-};
+    accessToken: string
+    email: string
+}

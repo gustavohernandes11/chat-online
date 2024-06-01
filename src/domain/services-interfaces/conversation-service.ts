@@ -1,13 +1,13 @@
-import { IMessage } from "../models/message";
+import { IMessage } from "../models/message"
 
 export interface IConversationService
-	extends IGetMessages,
-		ICreateNewConversation {}
+    extends IGetMessages,
+        ICreateNewConversation {}
 
 export type ICreateNewConversation = {
-	createNewConversation(): Promise<string>;
-};
+    createNewConversation(): Promise<string>
+}
 
 export type IGetMessages = {
-	getMessages(conversationId: string): Promise<IMessage[]>;
-};
+    getMessages(conversationId: string): Promise<IMessage[]>
+}

@@ -1,14 +1,14 @@
-import { InvalidParamError } from "@/presentation/errors";
-import { IValidation } from "@/presentation/protocols";
+import { InvalidParamError } from "@/presentation/errors"
+import { IValidation } from "@/presentation/protocols"
 
 export class CompareFieldsValidation implements IValidation {
-	constructor(
-		private readonly field: string,
-		private readonly fieldToCompare: string
-	) {}
+    constructor(
+        private readonly field: string,
+        private readonly fieldToCompare: string
+    ) {}
 
-	validate(input: any): any {
-		if (input[this.field] !== input[this.fieldToCompare])
-			return new InvalidParamError(this.fieldToCompare);
-	}
+    validate(input: any): any {
+        if (input[this.field] !== input[this.fieldToCompare])
+            return new InvalidParamError(this.fieldToCompare)
+    }
 }

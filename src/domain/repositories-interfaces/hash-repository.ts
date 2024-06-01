@@ -1,9 +1,9 @@
 export interface IHashRepository extends IHasher, IHashComparer {}
 
 export type IHasher = {
-	hash(text: string): Promise<string>;
-};
+    hash(text: string): Promise<string>
+}
 
 export type IHashComparer = {
-	compare(plaintext: string, digest: string): Promise<boolean>;
-};
+    compare(plaintext: string, digest: string): Promise<boolean>
+}

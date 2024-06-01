@@ -1,7 +1,7 @@
-import { IConversationRepository } from "../../domain/repositories-interfaces/conversation-repository";
+import { IConversationRepository } from "../../domain/repositories-interfaces/conversation-repository"
 
 export class ConversationService {
-	constructor(
-		private readonly conversationRepository: IConversationRepository
-	) {}
+    constructor(
+        private readonly conversationRepository: IConversationRepository
+    ) {}
 }

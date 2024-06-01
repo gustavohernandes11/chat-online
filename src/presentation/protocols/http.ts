@@ -1,9 +1,9 @@
 export interface IHttpRequest {
-	header?: any;
-	body: any;
+    header?: any
+    body: any
 }
 
 export interface IHttpResponse {
-	statusCode: number;
-	body?: any;
+    statusCode: number
+    body?: any
 }
