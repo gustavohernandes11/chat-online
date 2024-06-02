@@ -18,7 +18,8 @@ export class AuthMiddleware implements Middleware<AuthMiddlewareRequest> {
                         accessToken,
                         this.role
                     )
-                if (account) return ok({ IAccountId: account.id })
+                if (account)
+                    return ok({ IAuthenticatedAccountInfo: account.id })
             }
             return forbidden(new AccessDeniedError())
         } catch (error) {

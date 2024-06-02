@@ -1,4 +1,4 @@
-import { IAccountId } from "../models/account"
+import { IAuthenticatedAccountInfo } from "../models/account"
 
 export interface IMessageServices
     extends ISendMessageService,
@@ -6,7 +6,7 @@ export interface IMessageServices
 
 export type ISendMessageService = {
     sendMessage(
-        userId: IAccountId,
+        userId: IAuthenticatedAccountInfo,
         conversationId: string,
         content: string
     ): Promise<boolean>

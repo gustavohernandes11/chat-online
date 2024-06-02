@@ -1,4 +1,3 @@
-import { IAccountId } from "../models/account"
 import { IInvite } from "../models/invite"
 
 export interface IInvitationServices
@@ -10,25 +9,25 @@ export interface IInvitationServices
         IRemoveInvitationService {}
 
 export type IAskToJoinConversationService = {
-    askToJoin(id: IAccountId, conversationId: string): Promise<boolean>
+    askToJoin(userId: string, conversationId: string): Promise<boolean>
 }
 
 export type IListUserInvitationsService = {
-    listUserInvitations(id: IAccountId): Promise<IInvite[]>
+    listUserInvitations(userId: string): Promise<IInvite[]>
 }
 
 export type IListConversationInvitationsService = {
-    listConversationInvitations(id: string): Promise<IInvite[]>
+    listConversationInvitations(conversationId: string): Promise<IInvite[]>
 }
 
 export type IRemoveInvitationService = {
-    removeInvitation(id: IAccountId, conversationId: string): Promise<boolean>
+    removeInvitation(userId: string, conversationId: string): Promise<boolean>
 }
 
 export type IAcceptInvitationService = {
-    accept(id: IAccountId, conversationId: string): Promise<boolean>
+    accept(userId: string, conversationId: string): Promise<boolean>
 }
 
 export type IDeclineInvitationService = {
-    decline(id: IAccountId, conversationId: string): Promise<boolean>
+    decline(userId: string, conversationId: string): Promise<boolean>
 }

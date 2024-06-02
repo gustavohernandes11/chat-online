@@ -1,5 +1,8 @@
-import { IAccountId } from "../models/account"
-import { IConversation, IConversationPreview } from "../models/conversation"
+import {
+    IAddConversationModel,
+    IConversation,
+    IConversationPreview,
+} from "../models/conversation"
 import { IMessage } from "../models/message"
 
 export interface IConversationServices
@@ -14,11 +17,14 @@ export type IListMessagesService = {
 }
 
 export type IListConversationsService = {
-    listConversations(userId: IAccountId): Promise<IConversationPreview[]>
+    listConversations(userId: string): Promise<IConversationPreview[]>
 }
 
 export type ICreateNewConversationService = {
-    createNewConversation(): Promise<IConversation>
+    createNewConversation(
+        userId: string,
+        details: IAddConversationModel
+    ): Promise<IConversation | null>
 }
 
 export type IRemoveConversationService = {
@@ -26,5 +32,5 @@ export type IRemoveConversationService = {
 }
 
 export type IRemoveParticipantService = {
-    removeParticipant(id: IAccountId): Promise<boolean>
+    removeParticipant(userId: string): Promise<boolean>
 }

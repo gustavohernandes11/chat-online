@@ -1,4 +1,8 @@
-import { IAccountId, IAccountModel, IAddAccountModel } from "../models/account"
+import {
+    IAccountModel,
+    IAddAccountModel,
+    IAuthenticatedAccountInfo,
+} from "../models/account"
 
 export interface IAccountRepository
     extends IGetAccountByTokenRepository,
@@ -9,7 +13,10 @@ export interface IAccountRepository
         ICheckAccountByEmailRepository {}
 
 export type IGetAccountByTokenRepository = {
-    getAccountByToken(token: string, role?: string): Promise<IAccountId | null>
+    getAccountByToken(
+        token: string,
+        role?: string
+    ): Promise<IAuthenticatedAccountInfo | null>
 }
 
 export type IGetAccountByEmailRepository = {

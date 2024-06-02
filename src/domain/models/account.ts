@@ -11,4 +11,4 @@ export type IAddAccountModel = {
     password: string
 }
 
-export type IAccountId = { id: string }
+export type IAuthenticatedAccountInfo = { id: string }

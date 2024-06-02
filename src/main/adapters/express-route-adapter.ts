@@ -8,7 +8,7 @@ export const adaptRoute = (controller: IController) => {
             query: req?.query,
             ...(req.header || {}),
             ...(req.params || {}),
-            IAccountId: req.IAccountId,
+            IAuthenticatedAccountInfo: req.IAuthenticatedAccountInfo,
         }
 
         const httpResponse = await controller.handle(request)

@@ -1,7 +1,7 @@
 import {
-    IAccountId,
     IAccountModel,
     IAddAccountModel,
+    IAuthenticatedAccountInfo,
 } from "@/domain/models/account"
 import {
     IAddNewAccountRepository,
@@ -91,7 +91,7 @@ export class AccountMongoRepository
     async getAccountByToken(
         token: string,
         role?: string | undefined
-    ): Promise<IAccountId | null> {
+    ): Promise<IAuthenticatedAccountInfo | null> {
         const accountCollection = MongoHelper.getCollection("accounts")
         const account = await accountCollection.findOne(
             {

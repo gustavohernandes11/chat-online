@@ -56,7 +56,7 @@ describe("Auth Middleware", () => {
     it("should return the account id on success", async () => {
         const { sut } = makeSut()
         const response = await sut.handle(makeFakeRequest())
-        expect(response.body).toEqual({ IAccountId: "any_id" })
+        expect(response.body).toEqual({ IAuthenticatedAccountInfo: "any_id" })
     })
     it("should return 403 if dbLoadAccountByToken returns null", async () => {
         const { sut, dbLoadAccountByToken } = makeSut()
