@@ -5,9 +5,11 @@ export type IMessage = {
     date: string
     content: string
     sender: IAccountModel
+    conversationId: string
 }
 
 export type INewMessage = {
     content: string
     sender: IAccountModel
+    conversationId: string
 }
