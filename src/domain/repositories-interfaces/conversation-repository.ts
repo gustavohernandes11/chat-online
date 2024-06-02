@@ -1,28 +1,24 @@
+import { IAddConversationModel } from "../models/conversation"
 import { IMessage } from "../models/message"
 
 export interface IConversationRepository
-    extends ICreateNewConversationRepository,
+    extends ISaveConversationRepository,
         IRemoveConversationRepository,
         ICheckConversationByIdRepository,
-        ICheckMessageByIdRepository,
-        IGetAllMessagesRepository {}
+        IListAllMessagesByConversationIdRepository {}
 
-export type ICreateNewConversationRepository = {
-    createNewConversation(): Promise<string>
+export type ISaveConversationRepository = {
+    save(conversation: IAddConversationModel): Promise<string>
 }
 
 export type IRemoveConversationRepository = {
-    removeConversation(): Promise<boolean>
+    remove(id: string): Promise<boolean>
 }
 
 export type ICheckConversationByIdRepository = {
-    checkConversationById(id: string): Promise<boolean>
+    checkById(id: string): Promise<boolean>
 }
 
-export type ICheckMessageByIdRepository = {
-    checkMessageById(id: string): Promise<boolean>
-}
-
-export type IGetAllMessagesRepository = {
-    getAllMessages(conversationId: string): Promise<IMessage[]>
+export type IListAllMessagesByConversationIdRepository = {
+    listAllMessages(id: string): Promise<IMessage[]>
 }
