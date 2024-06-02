@@ -1,4 +1,4 @@
-import { IAuth } from "@/domain/services-interfaces/auth-service"
+import { IAuthService } from "@/domain/services-interfaces/auth-services"
 import {
     badRequest,
     ok,
@@ -15,7 +15,7 @@ import {
 export class LoginController implements IController {
     constructor(
         private readonly validation: IValidation,
-        private readonly authenticationService: IAuth
+        private readonly authenticationService: IAuthService
     ) {}
     async handle(request: IHttpRequest): Promise<IHttpResponse> {
         try {

@@ -1,4 +1,4 @@
-import { IAuthService } from "@/domain/services-interfaces/auth-service"
+import { IAuthServices } from "@/domain/services-interfaces/auth-services"
 import { EmailInUseError } from "../../errors/email-in-use-error"
 import {
     badRequest,
@@ -16,7 +16,7 @@ import {
 export class SigunUpController implements IController {
     constructor(
         private readonly validation: IValidation,
-        private readonly authenticationService: IAuthService
+        private readonly authenticationService: IAuthServices
     ) {}
 
     async handle(request: IHttpRequest): Promise<IHttpResponse> {

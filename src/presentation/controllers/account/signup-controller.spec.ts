@@ -12,7 +12,7 @@ import {
     IAuthenticationModel,
     IAuthenticationResult,
 } from "@/domain/models/authentication"
-import { IAuthService } from "@/domain/services-interfaces/auth-service"
+import { IAuthServices } from "@/domain/services-interfaces/auth-services"
 
 const mockSignupRequest = (bodyOverride?: any): IHttpRequest => {
     return {
@@ -28,7 +28,7 @@ const mockSignupRequest = (bodyOverride?: any): IHttpRequest => {
     }
 }
 describe("Signup Controller", () => {
-    class AuthenticationServiceStub implements IAuthService {
+    class AuthenticationServiceStub implements IAuthServices {
         async register(account: IAddAccountModel): Promise<boolean> {
             return new Promise(resolve => resolve(true))
         }

@@ -9,8 +9,8 @@ import {
     IHashComparer,
     IHashRepository,
 } from "@/domain/repositories-interfaces/hash-repository"
-import { IAuthService } from "@/domain/services-interfaces/auth-service"
-import { AuthService } from "./auth-service"
+import { IAuthServices } from "@/domain/services-interfaces/auth-services"
+import { AuthServices } from "./auth-services"
 
 class GetAccountByEmailRepositoryStub implements IGetAccountByEmailRepository {
     getAccountByEmail(email: string): Promise<IAccountModel | null> {
@@ -51,7 +51,7 @@ class EncrypterStub implements IEncrypter {
 }
 
 interface ISutType {
-    sut: IAuthService
+    sut: IAuthServices
     hashComparerStub: IHashComparer
     getAccountByEmailRepositoryStub: IGetAccountByEmailRepository
     addNewAccountRepositoryStub: IAddNewAccountRepository
@@ -68,7 +68,7 @@ const makeSut = (): ISutType => {
     const updateAccessTokenRepositoryStub =
         new UpdateAccessTokenRepositoryStub()
 
-    const sut = new AuthService(
+    const sut = new AuthServices(
         getAccountByEmailRepositoryStub,
         addNewAccountRepositoryStub,
         updateAccessTokenRepositoryStub,
@@ -86,7 +86,7 @@ const makeSut = (): ISutType => {
     }
 }
 
-describe("authService", () => {
+describe("AuthServices", () => {
     describe("GetAccountByEmailRepository", () => {
         it("should call the correct getAccountByEmailRepository method", async () => {
             const { sut, getAccountByEmailRepositoryStub } = makeSut()

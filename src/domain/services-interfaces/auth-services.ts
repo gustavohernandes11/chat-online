@@ -4,12 +4,12 @@ import {
     IAuthenticationResult,
 } from "../models/authentication"
 
-export interface IAuthService extends IRegisterAccount, IAuth {}
+export interface IAuthServices extends IRegisterAccountService, IAuthService {}
 
-export type IRegisterAccount = {
+export type IRegisterAccountService = {
     register(account: IAddAccountModel): Promise<boolean>
 }
 
-export type IAuth = {
+export type IAuthService = {
     auth(login: IAuthenticationModel): Promise<IAuthenticationResult | null>
 }

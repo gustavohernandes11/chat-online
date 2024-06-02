@@ -1,7 +1,7 @@
 import { AccountMongoRepository } from "@/infra/repositories/account-mongo-repository"
 import { BcryptAdapter } from "@/infra/repositories/bcrypt-adapter"
 import { JwtAdapter } from "@/infra/repositories/jwt-adapter"
-import { AuthService } from "@/infra/services/auth-service"
+import { AuthServices } from "@/infra/services/auth-services"
 import { SigunUpController } from "@/presentation/controllers/account/signup-controller"
 import { IController } from "@/presentation/protocols"
 import env from "../../config/env"
@@ -13,7 +13,7 @@ export const makeSignupController = (): IController => {
     const salt = 12
     const bcryptAdapter = new BcryptAdapter(salt)
     const jwtAdapter = new JwtAdapter(env.jwtSecret)
-    const authenticationService = new AuthService(
+    const authenticationService = new AuthServices(
         accountMongoRepoisitory,
         accountMongoRepoisitory,
         accountMongoRepoisitory,

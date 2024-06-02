@@ -5,14 +5,14 @@ import {
 } from "@/domain/models/authentication"
 import { IEncrypter } from "@/domain/repositories-interfaces/encrypt-repository"
 import { IHashRepository } from "@/domain/repositories-interfaces/hash-repository"
-import { IAuthService } from "@/domain/services-interfaces/auth-service"
+import { IAuthServices } from "@/domain/services-interfaces/auth-services"
 import {
     IAddNewAccountRepository,
     IGetAccountByEmailRepository,
     IUpdateAccessTokenRepository,
 } from "../../domain/repositories-interfaces/account-repository"
 
-export class AuthService implements IAuthService {
+export class AuthServices implements IAuthServices {
     constructor(
         private readonly getAccountByEmailRepository: IGetAccountByEmailRepository,
         private readonly addNewAccountRepository: IAddNewAccountRepository,

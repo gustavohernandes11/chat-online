@@ -2,7 +2,7 @@ import {
     IAuthenticationModel,
     IAuthenticationResult,
 } from "@/domain/models/authentication"
-import { IAuth } from "@/domain/services-interfaces/auth-service"
+import { IAuthService } from "@/domain/services-interfaces/auth-services"
 import { makeLoginValidations } from "@/main/factories/validation/make-login-validation"
 import { IHttpRequest } from "@/presentation/protocols"
 import { MissingParamError } from "../../errors"
@@ -21,7 +21,7 @@ export const mockLoginRequest = (bodyOverride?: any): IHttpRequest => {
 }
 
 describe("Login", () => {
-    class DbAuthenticationStub implements IAuth {
+    class DbAuthenticationStub implements IAuthService {
         auth(account: IAuthenticationModel): Promise<IAuthenticationResult> {
             return new Promise(resolve =>
                 resolve({
@@ -33,7 +33,7 @@ describe("Login", () => {
     }
     interface ISutTypes {
         sut: LoginController
-        authenticationStub: IAuth
+        authenticationStub: IAuthService
     }
     const makeSut = (): ISutTypes => {
         const loginValidations = makeLoginValidations()
