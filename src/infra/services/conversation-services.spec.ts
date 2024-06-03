@@ -213,4 +213,89 @@ describe("ConversationService", () => {
             expect(getByIdSpy).toHaveBeenCalledWith(saveId)
         })
     })
+    describe("listMessages", () => {
+        it("should call the checkById method of the conversationRepository with the correct id", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const checkByIdSpy = jest.spyOn(
+                conversationRepositoryStub,
+                "checkById"
+            )
+            const conversationId = "any_conversation_id"
+
+            await sut.listMessages(conversationId)
+
+            expect(checkByIdSpy).toHaveBeenCalledTimes(1)
+            expect(checkByIdSpy).toHaveBeenCalledWith(conversationId)
+        })
+
+        it("should return an empty array if the conversation does not exist", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            jest.spyOn(
+                conversationRepositoryStub,
+                "checkById"
+            ).mockResolvedValueOnce(false)
+            const conversationId = "invalid_conversation_id"
+
+            const result = await sut.listMessages(conversationId)
+
+            expect(result).toEqual([])
+        })
+
+        it("should call the listAllMessages method of the conversationRepository with the correct id", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const listAllMessagesSpy = jest.spyOn(
+                conversationRepositoryStub,
+                "listAllMessages"
+            )
+            const conversationId = "valid_conversation_id"
+
+            await sut.listMessages(conversationId)
+
+            expect(listAllMessagesSpy).toHaveBeenCalledTimes(1)
+            expect(listAllMessagesSpy).toHaveBeenCalledWith(conversationId)
+        })
+
+        it("should return the correct messages from the conversationRepository", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const conversationId = "valid_conversation_id"
+            const expectedMessages: IMessage[] = [
+                {
+                    id: "1",
+                    content: "Hello",
+                    conversationId,
+                    date: new Date().toISOString(),
+                    senderId: "6",
+                },
+                {
+                    id: "2",
+                    content: "Hi",
+                    conversationId,
+                    date: new Date().toISOString(),
+                    senderId: "7",
+                },
+            ]
+
+            jest.spyOn(
+                conversationRepositoryStub,
+                "listAllMessages"
+            ).mockResolvedValueOnce(expectedMessages)
+
+            const result = await sut.listMessages(conversationId)
+
+            expect(result).toEqual(expectedMessages)
+        })
+
+        it("should return an empty array if there are no messages", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const conversationId = "valid_conversation_id"
+            jest.spyOn(
+                conversationRepositoryStub,
+                "listAllMessages"
+            ).mockResolvedValueOnce([])
+
+            const result = await sut.listMessages(conversationId)
+
+            expect(result).toEqual([])
+        })
+    })
 })
