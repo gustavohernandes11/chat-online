@@ -14,7 +14,9 @@ export interface IConversationRepository
         IGetByConversationByIdRepository,
         IRemoveUserIdFromConversationRepository,
         IListUserIdsFromConversationRepository,
-        IAddMessageRepository {}
+        IAddMessageRepository,
+        IGetMessageByIdRepository,
+        IRemoveMessageContentRepository {}
 
 export type ISaveConversationRepository = {
     save(conversation: IAddConversationModel): Promise<string>
@@ -50,4 +52,12 @@ export type IListUserIdsFromConversationRepository = {
 
 export type IAddMessageRepository = {
     saveMessage(message: IAddMessageModel): Promise<boolean>
+}
+
+export type IGetMessageByIdRepository = {
+    getMessageById(messageId: string): Promise<IMessage | null>
+}
+
+export type IRemoveMessageContentRepository = {
+    removeMessageContent(messageId: string): Promise<boolean>
 }

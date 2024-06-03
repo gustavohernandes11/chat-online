@@ -32,13 +32,25 @@ export class MessageServices implements IMessageServices {
                     senderId,
                 }
 
-                return await this.conversationRepository.saveMessage(message)
+                return this.conversationRepository.saveMessage(message)
             }
         }
 
         return false
     }
-    removeMessage(requesterId: string, messageId: string): Promise<boolean> {
-        throw new Error("Method not implemented.")
+    async removeMessage(
+        requesterId: string,
+        messageId: string
+    ): Promise<boolean> {
+        const [userExists, message] = await Promise.all([
+            this.accountRepository.checkById(requesterId),
+            this.conversationRepository.getMessageById(messageId),
+        ])
+
+        if (userExists && message) {
+            return this.conversationRepository.removeMessageContent(messageId)
+        }
+
+        return false
     }
 }

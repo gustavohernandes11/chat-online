@@ -1,4 +1,3 @@
-import { IMessage } from "@/domain/models/message"
 import { IAccountRepository } from "@/domain/repositories-interfaces/account-repository"
 import { IConversationRepository } from "@/domain/repositories-interfaces/conversation-repository"
 import { IMessageServices } from "@/domain/services-interfaces/message-services"
@@ -25,19 +24,6 @@ const makeSut = (): ISutType => {
         accountRepositoryStub,
         conversationRepositoryStub,
     }
-}
-
-const makeFakeMessage = (overide?: IMessage): IMessage => {
-    return Object.assign(
-        {
-            id: "any_id",
-            conversationId: "1",
-            senderId: "2",
-            content: "any_content",
-            date: new Date().toISOString(),
-        },
-        overide
-    )
 }
 
 describe("MessageServices", () => {
@@ -163,6 +149,83 @@ describe("MessageServices", () => {
             )
 
             expect(result).toBe(true)
+        })
+    })
+    describe("removeMessage", () => {
+        it("should return false if the user doesn't exist", async () => {
+            const { sut, accountRepositoryStub } = makeSut()
+            const userId = "invalid_user_id"
+            const messageId = "message_id"
+            jest.spyOn(accountRepositoryStub, "checkById").mockResolvedValue(
+                false
+            )
+
+            const response = await sut.removeMessage(userId, messageId)
+
+            expect(response).toBe(false)
+        })
+
+        it("should return false if the message doesn't exist", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const userId = "user_id"
+            const messageId = "invalid_message_id"
+            jest.spyOn(
+                conversationRepositoryStub,
+                "getMessageById"
+            ).mockResolvedValue(null)
+
+            const response = await sut.removeMessage(userId, messageId)
+
+            expect(response).toBe(false)
+        })
+
+        it("should call the account repository checkById method to verify if the user exists", async () => {
+            const { sut, accountRepositoryStub } = makeSut()
+            const userId = "user_id"
+            const messageId = "message_id"
+            const checkByIdSpy = jest.spyOn(accountRepositoryStub, "checkById")
+
+            await sut.removeMessage(userId, messageId)
+
+            expect(checkByIdSpy).toHaveBeenCalledWith(userId)
+        })
+
+        it("should call the conversation repository getMessageById method to retrieve the message", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const userId = "user_id"
+            const messageId = "message_id"
+            const getMessageByIdSpy = jest.spyOn(
+                conversationRepositoryStub,
+                "getMessageById"
+            )
+
+            await sut.removeMessage(userId, messageId)
+
+            expect(getMessageByIdSpy).toHaveBeenCalledWith(messageId)
+        })
+
+        it("should return true if the message is removed successfully", async () => {
+            const { sut } = makeSut()
+            const userId = "user_id"
+            const messageId = "message_id"
+
+            const response = await sut.removeMessage(userId, messageId)
+
+            expect(response).toBe(true)
+        })
+
+        it("should return false if the message removal fails", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const userId = "user_id"
+            const messageId = "message_id"
+            jest.spyOn(
+                conversationRepositoryStub,
+                "removeMessageContent"
+            ).mockResolvedValue(false)
+
+            const response = await sut.removeMessage(userId, messageId)
+
+            expect(response).toBe(false)
         })
     })
 })

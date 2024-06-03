@@ -8,12 +8,22 @@ import { IConversationRepository } from "@/domain/repositories-interfaces/conver
 import {
     makeFakeConversation,
     makeFakeConversationPreview,
+    makeFakeMessage,
 } from "./conversation-factories"
 
 export class ConversationRepositoryStub implements IConversationRepository {
-    saveMessage(message: IAddMessageModel): Promise<boolean> {
-        return Promise.resolve(true)
+    async getMessageById(messageId: string): Promise<IMessage> {
+        return makeFakeMessage({ id: messageId })
     }
+
+    async removeMessageContent(messageId: string): Promise<boolean> {
+        return true
+    }
+
+    async saveMessage(message: IAddMessageModel): Promise<boolean> {
+        return true
+    }
+
     async listUserIds(conversationId: string): Promise<string[]> {
         return ["1", "2", "3"]
     }
