@@ -6,7 +6,10 @@ import {
 } from "@/domain/repositories-interfaces/account-repository"
 import { IConversationRepository } from "@/domain/repositories-interfaces/conversation-repository"
 import { IConversationServices } from "@/domain/services-interfaces/conversation-services"
-import { makeFakeConversationPreview } from "./__mocks__/conversation-factories"
+import {
+    makeFakeConversation,
+    makeFakeConversationPreview,
+} from "./__mocks__/conversation-factories"
 import { ConversationRepositoryStub } from "./__mocks__/conversation-repository-stub"
 import { ConversationServices } from "./conversation-services"
 jest.useFakeTimers()
@@ -216,6 +219,88 @@ describe("ConversationService", () => {
             const result = await sut.listMessages(conversationId)
 
             expect(result).toEqual([])
+        })
+    })
+    describe("removeConversation", () => {
+        it("should return false if the conversation does not exist", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            jest.spyOn(
+                conversationRepositoryStub,
+                "checkById"
+            ).mockResolvedValueOnce(false)
+            const requesterId = "requester_id"
+            const conversationId = "non_existent_conversation_id"
+
+            const result = await sut.removeConversation(
+                requesterId,
+                conversationId
+            )
+
+            expect(result).toBe(false)
+        })
+
+        it("should return false if the requester is not the owner of the conversation", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const conversation = makeFakeConversation({
+                ownerId: "different_owner_id",
+            })
+            jest.spyOn(
+                conversationRepositoryStub,
+                "getById"
+            ).mockResolvedValueOnce(conversation)
+            const requesterId = "requester_id"
+            const conversationId = "conversation_id"
+
+            const result = await sut.removeConversation(
+                requesterId,
+                conversationId
+            )
+
+            expect(result).toBe(false)
+        })
+
+        it("should return true if the requester is the owner and the conversation is removed successfully", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const conversation = makeFakeConversation({
+                ownerId: "requester_id",
+            })
+            jest.spyOn(
+                conversationRepositoryStub,
+                "getById"
+            ).mockResolvedValueOnce(conversation)
+            const requesterId = "requester_id"
+            const conversationId = "conversation_id"
+
+            const result = await sut.removeConversation(
+                requesterId,
+                conversationId
+            )
+
+            expect(result).toBe(true)
+        })
+
+        it("should return false if the requester is the owner but the removal fails", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const conversation = makeFakeConversation({
+                ownerId: "requester_id",
+            })
+            jest.spyOn(
+                conversationRepositoryStub,
+                "getById"
+            ).mockResolvedValueOnce(conversation)
+            jest.spyOn(
+                conversationRepositoryStub,
+                "remove"
+            ).mockResolvedValueOnce(false)
+            const requesterId = "requester_id"
+            const conversationId = "conversation_id"
+
+            const result = await sut.removeConversation(
+                requesterId,
+                conversationId
+            )
+
+            expect(result).toBe(false)
         })
     })
 })
