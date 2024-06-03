@@ -25,9 +25,9 @@ export type IRemoveInvitationService = {
 }
 
 export type IAcceptInvitationService = {
-    accept(userId: string, conversationId: string): Promise<boolean>
+    accept(userId: string, invitationId: string): Promise<boolean>
 }
 
 export type IDeclineInvitationService = {
-    decline(userId: string, conversationId: string): Promise<boolean>
+    decline(userId: string, invitationId: string): Promise<boolean>
 }

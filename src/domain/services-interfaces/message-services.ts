@@ -1,17 +1,15 @@
-import { IAuthenticatedAccountInfo } from "../models/account"
-
 export interface IMessageServices
     extends ISendMessageService,
         IRemoveMessageService {}
 
 export type ISendMessageService = {
     sendMessage(
-        userId: IAuthenticatedAccountInfo,
+        userId: string,
         conversationId: string,
         content: string
     ): Promise<boolean>
 }
 
 export type IRemoveMessageService = {
-    removeMessage(messageId: string): Promise<boolean>
+    removeMessage(requesterId: string, messageId: string): Promise<boolean>
 }

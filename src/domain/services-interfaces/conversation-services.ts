@@ -28,9 +28,16 @@ export type ICreateNewConversationService = {
 }
 
 export type IRemoveConversationService = {
-    removeConversation(conversationId: string): Promise<boolean>
+    removeConversation(
+        requesterId: string,
+        conversationId: string
+    ): Promise<boolean>
 }
 
 export type IRemoveParticipantService = {
-    removeParticipant(userId: string): Promise<boolean>
+    removeParticipant(
+        requesterId: string,
+        userIdToRemove: string,
+        conversationId: string
+    ): Promise<boolean>
 }

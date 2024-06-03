@@ -11,7 +11,9 @@ export interface IConversationRepository
         ICheckConversationByIdRepository,
         IListAllMessagesByConversationIdRepository,
         IListAllConversationsRepository,
-        IGetByConversationByIdRepository {}
+        IGetByConversationByIdRepository,
+        IRemoveUserIdFromConversationRepository,
+        IListUserIdsFromConversationRepository {}
 
 export type ISaveConversationRepository = {
     save(conversation: IAddConversationModel): Promise<string>
@@ -30,9 +32,17 @@ export type IGetByConversationByIdRepository = {
 }
 
 export type IListAllMessagesByConversationIdRepository = {
-    listAllMessages(conversationId: string): Promise<IMessage[]>
+    listAllMessages(conversationId: string): Promise<IMessage[] | null>
 }
 
 export type IListAllConversationsRepository = {
     listAllConversations(userId: string): Promise<IConversationPreview[]>
+}
+
+export type IRemoveUserIdFromConversationRepository = {
+    removeUserId(userId: string, conversationId: string): Promise<boolean>
+}
+
+export type IListUserIdsFromConversationRepository = {
+    listUserIds(conversationId: string): Promise<string[]>
 }
