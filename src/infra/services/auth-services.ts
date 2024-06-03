@@ -6,26 +6,19 @@ import {
 import { IEncrypter } from "@/domain/repositories-interfaces/encrypt-repository"
 import { IHashRepository } from "@/domain/repositories-interfaces/hash-repository"
 import { IAuthServices } from "@/domain/services-interfaces/auth-services"
-import {
-    IAddNewAccountRepository,
-    IGetAccountByEmailRepository,
-    IUpdateAccessTokenRepository,
-} from "../../domain/repositories-interfaces/account-repository"
+import { IAccountRepository } from "../../domain/repositories-interfaces/account-repository"
 
 export class AuthServices implements IAuthServices {
     constructor(
-        private readonly getAccountByEmailRepository: IGetAccountByEmailRepository,
-        private readonly addNewAccountRepository: IAddNewAccountRepository,
-        private readonly updateAccessTokenRepository: IUpdateAccessTokenRepository,
+        private readonly accountRepository: IAccountRepository,
         private readonly encryptRepository: IEncrypter,
         private readonly hashRepository: IHashRepository
     ) {}
 
     async register(account: IAddAccountModel): Promise<boolean> {
-        const inUseEmail =
-            await this.getAccountByEmailRepository.getAccountByEmail(
-                account.email
-            )
+        const inUseEmail = await this.accountRepository.getAccountByEmail(
+            account.email
+        )
         let success = false
 
         if (!inUseEmail) {
@@ -33,7 +26,7 @@ export class AuthServices implements IAuthServices {
                 account.password
             )
 
-            success = await this.addNewAccountRepository.addNewAccount(
+            success = await this.accountRepository.addNewAccount(
                 Object.assign({ ...account, password: hashedPassword })
             )
         }
@@ -44,10 +37,9 @@ export class AuthServices implements IAuthServices {
     async auth(
         login: IAuthenticationModel
     ): Promise<IAuthenticationResult | null> {
-        const account =
-            await this.getAccountByEmailRepository.getAccountByEmail(
-                login.email
-            )
+        const account = await this.accountRepository.getAccountByEmail(
+            login.email
+        )
 
         if (account) {
             const isValid = await this.hashRepository.compare(
@@ -59,7 +51,7 @@ export class AuthServices implements IAuthServices {
                 const accessToken = await this.encryptRepository.encrypt(
                     account.id
                 )
-                await this.updateAccessTokenRepository.updateAccessToken(
+                await this.accountRepository.updateAccessToken(
                     account.id,
                     accessToken
                 )

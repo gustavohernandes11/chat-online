@@ -15,8 +15,6 @@ export const makeLoginController = (): IController => {
     const jwtAdapter = new JwtAdapter(env.jwtSecret)
     const dbAuthentication = new AuthServices(
         accountMongoRepository,
-        accountMongoRepository,
-        accountMongoRepository,
         jwtAdapter,
         bcryptAdapter
     )

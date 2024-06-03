@@ -1,5 +1,6 @@
 import { IAccountModel, IAddAccountModel } from "@/domain/models/account"
 import {
+    IAccountRepository,
     IAddNewAccountRepository,
     IGetAccountByEmailRepository,
     IUpdateAccessTokenRepository,
@@ -10,6 +11,7 @@ import {
     IHashRepository,
 } from "@/domain/repositories-interfaces/hash-repository"
 import { IAuthServices } from "@/domain/services-interfaces/auth-services"
+import { AccountRepositoryStub } from "./__mocks__/account-repository-stub"
 import { AuthServices } from "./auth-services"
 
 class GetAccountByEmailRepositoryStub implements IGetAccountByEmailRepository {
@@ -52,46 +54,36 @@ class EncrypterStub implements IEncrypter {
 
 interface ISutType {
     sut: IAuthServices
+    accountRepositoryStub: IAccountRepository
     hashComparerStub: IHashComparer
-    getAccountByEmailRepositoryStub: IGetAccountByEmailRepository
-    addNewAccountRepositoryStub: IAddNewAccountRepository
     encrypter: IEncrypter
-    updateAccessTokenRepositoryStub: IUpdateAccessTokenRepository
 }
 
 const makeSut = (): ISutType => {
+    const accountRepositoryStub = new AccountRepositoryStub()
     const hashComparerStub = new HashComparerStub()
-    const getAccountByEmailRepositoryStub =
-        new GetAccountByEmailRepositoryStub()
-    const addNewAccountRepositoryStub = new AddNewAccountRepositoryStub()
     const encrypter = new EncrypterStub()
-    const updateAccessTokenRepositoryStub =
-        new UpdateAccessTokenRepositoryStub()
 
     const sut = new AuthServices(
-        getAccountByEmailRepositoryStub,
-        addNewAccountRepositoryStub,
-        updateAccessTokenRepositoryStub,
+        accountRepositoryStub,
         encrypter,
         hashComparerStub
     )
 
     return {
         sut,
-        getAccountByEmailRepositoryStub,
-        addNewAccountRepositoryStub,
+        accountRepositoryStub,
         hashComparerStub,
         encrypter,
-        updateAccessTokenRepositoryStub,
     }
 }
 
 describe("AuthServices", () => {
     describe("GetAccountByEmailRepository", () => {
         it("should call the correct getAccountByEmailRepository method", async () => {
-            const { sut, getAccountByEmailRepositoryStub } = makeSut()
+            const { sut, accountRepositoryStub } = makeSut()
             const loadSpy = jest.spyOn(
-                getAccountByEmailRepositoryStub,
+                accountRepositoryStub,
                 "getAccountByEmail"
             )
 
@@ -101,9 +93,9 @@ describe("AuthServices", () => {
             expect(loadSpy).toHaveBeenCalledWith("any_email")
         })
         it("should return null if account wasn't found", async () => {
-            const { sut, getAccountByEmailRepositoryStub } = makeSut()
+            const { sut, accountRepositoryStub } = makeSut()
             jest.spyOn(
-                getAccountByEmailRepositoryStub,
+                accountRepositoryStub,
                 "getAccountByEmail"
             ).mockReturnValueOnce(new Promise(resolve => resolve(null)))
 
@@ -115,9 +107,9 @@ describe("AuthServices", () => {
             expect(response).toBeNull()
         })
         it("should throw if getAccountByEmailRepository throws", async () => {
-            const { sut, getAccountByEmailRepositoryStub } = makeSut()
+            const { sut, accountRepositoryStub } = makeSut()
             jest.spyOn(
-                getAccountByEmailRepositoryStub,
+                accountRepositoryStub,
                 "getAccountByEmail"
             ).mockImplementationOnce((): never => {
                 throw new Error()
@@ -133,17 +125,10 @@ describe("AuthServices", () => {
 
     describe("AddNewAccountRepository", () => {
         it("should call addNewAccount with correct parameters", async () => {
-            const {
-                sut,
-                addNewAccountRepositoryStub,
-                getAccountByEmailRepositoryStub,
-            } = makeSut()
-            const addSpy = jest.spyOn(
-                addNewAccountRepositoryStub,
-                "addNewAccount"
-            )
+            const { sut, accountRepositoryStub } = makeSut()
+            const addSpy = jest.spyOn(accountRepositoryStub, "addNewAccount")
             jest.spyOn(
-                getAccountByEmailRepositoryStub,
+                accountRepositoryStub,
                 "getAccountByEmail"
             ).mockImplementationOnce(() => Promise.resolve(null))
 
@@ -160,18 +145,14 @@ describe("AuthServices", () => {
             })
         })
         it("should throw if addNewAccount throws", async () => {
-            const {
-                sut,
-                addNewAccountRepositoryStub,
-                getAccountByEmailRepositoryStub,
-            } = makeSut()
+            const { sut, accountRepositoryStub } = makeSut()
             jest.spyOn(
-                getAccountByEmailRepositoryStub,
+                accountRepositoryStub,
                 "getAccountByEmail"
             ).mockImplementationOnce(() => Promise.resolve(null))
 
             jest.spyOn(
-                addNewAccountRepositoryStub,
+                accountRepositoryStub,
                 "addNewAccount"
             ).mockImplementationOnce((): never => {
                 throw new Error()
@@ -188,9 +169,9 @@ describe("AuthServices", () => {
 
     describe("UpdateAccessTokenRepository", () => {
         it("should throw if updateAccessTokenRepositoryStub throws", async () => {
-            const { sut, updateAccessTokenRepositoryStub } = makeSut()
+            const { sut, accountRepositoryStub } = makeSut()
             jest.spyOn(
-                updateAccessTokenRepositoryStub,
+                accountRepositoryStub,
                 "updateAccessToken"
             ).mockImplementationOnce((): never => {
                 throw new Error()
@@ -203,9 +184,9 @@ describe("AuthServices", () => {
             expect(promise).rejects.toThrow()
         })
         it("should call updateAccessTokenRepositoryStub method when correct data is provided", async () => {
-            const { sut, updateAccessTokenRepositoryStub } = makeSut()
+            const { sut, accountRepositoryStub } = makeSut()
             const updateTokenSpy = jest.spyOn(
-                updateAccessTokenRepositoryStub,
+                accountRepositoryStub,
                 "updateAccessToken"
             )
 
