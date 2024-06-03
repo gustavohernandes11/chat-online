@@ -303,4 +303,119 @@ describe("ConversationService", () => {
             expect(result).toBe(false)
         })
     })
+    describe("removeParticipant", () => {
+        it("should return false if the conversation does not exist", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            jest.spyOn(
+                conversationRepositoryStub,
+                "checkById"
+            ).mockResolvedValueOnce(false)
+            const requesterId = "requester_id"
+            const userIdToRemove = "user_to_remove_id"
+            const conversationId = "non_existent_conversation_id"
+
+            const result = await sut.removeParticipant(
+                requesterId,
+                userIdToRemove,
+                conversationId
+            )
+
+            expect(result).toBe(false)
+        })
+
+        it("should return false if the user to remove is not in the conversation", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const conversation = makeFakeConversation({
+                userIds: ["user_id_1", "user_id_2"],
+            })
+            jest.spyOn(
+                conversationRepositoryStub,
+                "getById"
+            ).mockResolvedValueOnce(conversation)
+            const requesterId = "requester_id"
+            const userIdToRemove = "user_to_remove_id"
+            const conversationId = "conversation_id"
+
+            const result = await sut.removeParticipant(
+                requesterId,
+                userIdToRemove,
+                conversationId
+            )
+
+            expect(result).toBe(false)
+        })
+
+        it("should return false if the requester is not the conversation owner", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const conversation = makeFakeConversation({
+                ownerId: "different_owner_id",
+                userIds: ["requester_id", "user_to_remove_id"],
+            })
+            jest.spyOn(
+                conversationRepositoryStub,
+                "getById"
+            ).mockResolvedValueOnce(conversation)
+            const requesterId = "requester_id"
+            const userIdToRemove = "user_to_remove_id"
+            const conversationId = "conversation_id"
+
+            const result = await sut.removeParticipant(
+                requesterId,
+                userIdToRemove,
+                conversationId
+            )
+
+            expect(result).toBe(false)
+        })
+
+        it("should return true if the requester is the owner and the user is removed successfully", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const conversation = makeFakeConversation({
+                ownerId: "requester_id",
+                userIds: ["requester_id", "user_to_remove_id"],
+            })
+            jest.spyOn(
+                conversationRepositoryStub,
+                "getById"
+            ).mockResolvedValueOnce(conversation)
+            const requesterId = "requester_id"
+            const userIdToRemove = "user_to_remove_id"
+            const conversationId = "conversation_id"
+
+            const result = await sut.removeParticipant(
+                requesterId,
+                userIdToRemove,
+                conversationId
+            )
+
+            expect(result).toBe(true)
+        })
+
+        it("should return false if the requester is the owner but the user removal fails", async () => {
+            const { sut, conversationRepositoryStub } = makeSut()
+            const conversation = makeFakeConversation({
+                ownerId: "requester_id",
+                userIds: ["requester_id", "user_to_remove_id"],
+            })
+            jest.spyOn(
+                conversationRepositoryStub,
+                "getById"
+            ).mockResolvedValueOnce(conversation)
+            jest.spyOn(
+                conversationRepositoryStub,
+                "removeUserId"
+            ).mockResolvedValueOnce(false)
+            const requesterId = "requester_id"
+            const userIdToRemove = "user_to_remove_id"
+            const conversationId = "conversation_id"
+
+            const result = await sut.removeParticipant(
+                requesterId,
+                userIdToRemove,
+                conversationId
+            )
+
+            expect(result).toBe(false)
+        })
+    })
 })
