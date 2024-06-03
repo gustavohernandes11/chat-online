@@ -3,7 +3,7 @@ import {
     IConversation,
     IConversationPreview,
 } from "../models/conversation"
-import { IMessage } from "../models/message"
+import { IAddMessageModel, IMessage } from "../models/message"
 
 export interface IConversationRepository
     extends ISaveConversationRepository,
@@ -13,7 +13,8 @@ export interface IConversationRepository
         IListAllConversationsRepository,
         IGetByConversationByIdRepository,
         IRemoveUserIdFromConversationRepository,
-        IListUserIdsFromConversationRepository {}
+        IListUserIdsFromConversationRepository,
+        IAddMessageRepository {}
 
 export type ISaveConversationRepository = {
     save(conversation: IAddConversationModel): Promise<string>
@@ -45,4 +46,8 @@ export type IRemoveUserIdFromConversationRepository = {
 
 export type IListUserIdsFromConversationRepository = {
     listUserIds(conversationId: string): Promise<string[]>
+}
+
+export type IAddMessageRepository = {
+    saveMessage(message: IAddMessageModel): Promise<boolean>
 }

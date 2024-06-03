@@ -6,7 +6,7 @@ export type IMessage = {
     conversationId: string
 }
 
-export type INewMessage = {
+export type IAddMessageModel = {
     content: string
     senderId: string
     conversationId: string

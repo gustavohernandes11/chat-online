@@ -3,7 +3,7 @@ import {
     IConversation,
     IConversationPreview,
 } from "@/domain/models/conversation"
-import { IMessage } from "@/domain/models/message"
+import { IAddMessageModel, IMessage } from "@/domain/models/message"
 import { IConversationRepository } from "@/domain/repositories-interfaces/conversation-repository"
 import {
     makeFakeConversation,
@@ -11,6 +11,9 @@ import {
 } from "./conversation-factories"
 
 export class ConversationRepositoryStub implements IConversationRepository {
+    saveMessage(message: IAddMessageModel): Promise<boolean> {
+        return Promise.resolve(true)
+    }
     async listUserIds(conversationId: string): Promise<string[]> {
         return ["1", "2", "3"]
     }
