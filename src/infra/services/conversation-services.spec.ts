@@ -1,8 +1,4 @@
-import {
-    IAddConversationModel,
-    IConversation,
-    IConversationPreview,
-} from "@/domain/models/conversation"
+import { IAddConversationModel } from "@/domain/models/conversation"
 import { IMessage } from "@/domain/models/message"
 import {
     IAccountRepository,
@@ -10,86 +6,10 @@ import {
 } from "@/domain/repositories-interfaces/account-repository"
 import { IConversationRepository } from "@/domain/repositories-interfaces/conversation-repository"
 import { IConversationServices } from "@/domain/services-interfaces/conversation-services"
+import { makeFakeConversationPreview } from "./__mocks__/conversation-factories"
+import { ConversationRepositoryStub } from "./__mocks__/conversation-repository-stub"
 import { ConversationServices } from "./conversation-services"
 jest.useFakeTimers()
-
-const makeFakeConversationPreview = (
-    override?: Partial<IConversationPreview>
-): IConversationPreview => {
-    return Object.assign(
-        {
-            id: "any_id",
-            createdAt: new Date().toISOString(),
-            description: "any_description",
-            invitationCode: 123,
-            name: "any_conversation_name",
-            ownerId: "2",
-            userIds: ["1", "2", "3", "4", "5"],
-            visibility: "public",
-        },
-        override
-    )
-}
-
-const makeFakeConversation = (
-    override?: Partial<IConversation>
-): IConversation => {
-    return Object.assign(
-        {
-            id: "any_id",
-            createdAt: new Date().toISOString(),
-            description: "any_description",
-            invitationCode: 123,
-            name: "any_conversation_name",
-            ownerId: "2",
-            userIds: ["1", "2", "3", "4", "5"],
-            visibility: "public",
-            messages: [],
-        },
-        override
-    )
-}
-
-class ConversationRepositoryStub implements IConversationRepository {
-    async listUserIds(conversationId: string): Promise<string[]> {
-        return ["1", "2", "3"]
-    }
-    async removeUserId(
-        userId: string,
-        conversationId: string
-    ): Promise<boolean> {
-        return true
-    }
-    async save(conversation: IAddConversationModel): Promise<string> {
-        return "new_conversation_id"
-    }
-
-    async remove(id: string): Promise<boolean> {
-        return true
-    }
-
-    async checkById(id: string): Promise<boolean> {
-        return true
-    }
-
-    async getById(id: string): Promise<IConversation> {
-        return makeFakeConversation({ id })
-    }
-
-    async listAllMessages(conversationId: string): Promise<IMessage[]> {
-        return Promise.resolve([])
-    }
-
-    async listAllConversations(
-        userId: string
-    ): Promise<IConversationPreview[]> {
-        return [
-            makeFakeConversationPreview({ id: "1" }),
-            makeFakeConversationPreview({ id: "2" }),
-            makeFakeConversationPreview({ id: "3" }),
-        ]
-    }
-}
 
 class CheckAccountByIdRepositoryStub implements ICheckAccountByIdRepository {
     checkById(email: string): Promise<boolean> {
