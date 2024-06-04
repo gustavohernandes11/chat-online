@@ -61,14 +61,11 @@ export class ConversationServices implements IConversationServices {
         requesterId: string,
         conversationId: string
     ): Promise<boolean> {
-        const conversationExists = await this.conversationRepository.checkById(
+        const conversation = await this.conversationRepository.getById(
             conversationId
         )
 
-        if (conversationExists) {
-            const conversation = await this.conversationRepository.getById(
-                conversationId
-            )
+        if (conversation) {
             const requesterIsConversationOwner =
                 conversation.ownerId === requesterId
             if (requesterIsConversationOwner) {
@@ -82,14 +79,10 @@ export class ConversationServices implements IConversationServices {
         userIdToRemove: string,
         conversationId: string
     ): Promise<boolean> {
-        const conversationExists = await this.conversationRepository.checkById(
+        const conversation = await this.conversationRepository.getById(
             conversationId
         )
-
-        if (conversationExists) {
-            const conversation = await this.conversationRepository.getById(
-                conversationId
-            )
+        if (conversation) {
             const belongsToConversation =
                 conversation.userIds.includes(userIdToRemove)
 

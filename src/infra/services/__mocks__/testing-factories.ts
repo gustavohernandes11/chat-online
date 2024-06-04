@@ -2,6 +2,7 @@ import {
     IConversation,
     IConversationPreview,
 } from "@/domain/models/conversation"
+import { IInvite } from "@/domain/models/invite"
 import { IMessage } from "@/domain/models/message"
 
 export const makeFakeConversationPreview = (
@@ -49,6 +50,19 @@ export const makeFakeMessage = (overide?: Partial<IMessage>): IMessage => {
             senderId: "2",
             content: "any_content",
             date: new Date().toISOString(),
+        },
+        overide
+    )
+}
+
+export const makeFakeInvite = (overide?: Partial<IInvite>): IInvite => {
+    return Object.assign(
+        {
+            id: "any_id",
+            conversationId: "1",
+            userId: "2",
+            status: "pending",
+            createdAt: new Date().toISOString(),
         },
         overide
     )

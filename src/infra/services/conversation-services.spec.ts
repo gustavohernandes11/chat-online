@@ -6,11 +6,11 @@ import {
 } from "@/domain/repositories-interfaces/account-repository"
 import { IConversationRepository } from "@/domain/repositories-interfaces/conversation-repository"
 import { IConversationServices } from "@/domain/services-interfaces/conversation-services"
+import { ConversationRepositoryStub } from "./__mocks__/conversation-repository-stub"
 import {
     makeFakeConversation,
     makeFakeConversationPreview,
-} from "./__mocks__/conversation-factories"
-import { ConversationRepositoryStub } from "./__mocks__/conversation-repository-stub"
+} from "./__mocks__/testing-factories"
 import { ConversationServices } from "./conversation-services"
 jest.useFakeTimers()
 

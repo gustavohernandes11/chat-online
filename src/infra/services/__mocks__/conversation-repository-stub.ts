@@ -9,7 +9,7 @@ import {
     makeFakeConversation,
     makeFakeConversationPreview,
     makeFakeMessage,
-} from "./conversation-factories"
+} from "./testing-factories"
 
 export class ConversationRepositoryStub implements IConversationRepository {
     async getMessageById(messageId: string): Promise<IMessage> {

@@ -31,7 +31,7 @@ export type ICheckConversationByIdRepository = {
 }
 
 export type IGetByConversationByIdRepository = {
-    getById(id: string): Promise<IConversation>
+    getById(id: string): Promise<IConversation | null>
 }
 
 export type IListAllMessagesByConversationIdRepository = {
