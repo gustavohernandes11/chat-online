@@ -4,7 +4,7 @@ import {
     IInviteStatus,
 } from "@/domain/models/invite"
 import { IInvitationRepository } from "@/domain/repositories-interfaces/invitation-repository"
-import { makeFakeInvite } from "./testing-factories"
+import { makeFakeInvite } from "./services-testing-factories"
 
 export class InvitationRepositoryStub implements IInvitationRepository {
     async listConversationInvitations(

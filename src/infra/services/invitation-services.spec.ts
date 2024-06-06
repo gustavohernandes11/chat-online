@@ -5,7 +5,7 @@ import { InvitationRepositoryStub } from "./__mocks__/invitation-repository-stub
 import {
     makeFakeConversation,
     makeFakeInvite,
-} from "./__mocks__/testing-factories"
+} from "./__mocks__/services-testing-factories"
 import { InvitationServices } from "./invitation-services"
 
 interface ISutType {

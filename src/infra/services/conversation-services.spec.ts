@@ -10,7 +10,7 @@ import { ConversationRepositoryStub } from "./__mocks__/conversation-repository-
 import {
     makeFakeConversation,
     makeFakeConversationPreview,
-} from "./__mocks__/testing-factories"
+} from "./__mocks__/services-testing-factories"
 import { ConversationServices } from "./conversation-services"
 jest.useFakeTimers()
 
