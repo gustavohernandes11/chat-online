@@ -2,7 +2,10 @@ import { IConversationRepository } from "@/domain/repositories-interfaces/conver
 import { Collection } from "mongodb"
 import { MongoHelper } from "../utils/mongo-helper"
 import { parseToObjectId } from "../utils/parse-to-object-id"
-import { makeFakeAddConversationModel } from "./__mocks__/repository-testing-factories"
+import {
+    makeFakeAddConversationModel,
+    makeFakeConversation,
+} from "./__mocks__/repository-testing-factories"
 import { ConversationMongoRepository } from "./conversation-repository"
 
 describe("Conversation MongoDB Repository", () => {
@@ -81,6 +84,36 @@ describe("Conversation MongoDB Repository", () => {
             const exists = await sut.checkById("nonexistent_id")
 
             expect(exists).toBe(false)
+        })
+    })
+    describe("listAllMessages", () => {
+        it("should return the correct messages from the conversation", async () => {
+            const { sut } = makeSut()
+
+            const fakeConversation = makeFakeConversation()
+            const { insertedId } = await conversationCollection.insertOne(
+                fakeConversation
+            )
+
+            const messages = await sut.listAllMessages(insertedId.toString())
+
+            expect(messages).toEqual(fakeConversation.messages)
+        })
+    })
+    describe("listAllConversations", () => {
+        it("should list all the user's conversations", async () => {
+            const { sut } = makeSut()
+            const userId = "any_user_id"
+            const conversations = [
+                makeFakeConversation({ ownerId: userId }),
+                makeFakeConversation({ ownerId: userId }),
+                makeFakeConversation({ ownerId: userId }),
+            ]
+            await conversationCollection.insertMany(conversations)
+
+            const userConversations = await sut.listAllConversations(userId)
+
+            expect(userConversations.length).toBe(3)
         })
     })
 })

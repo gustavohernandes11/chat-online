@@ -40,28 +40,59 @@ export class ConversationMongoRepository implements IConversationRepository {
 
         return conversation !== null
     }
-    listAllMessages(conversationId: string): Promise<IMessage[] | null> {
+    async listAllMessages(conversationId: string): Promise<IMessage[] | null> {
+        const conversationCollection =
+            MongoHelper.getCollection("conversations")
+        const conversation =
+            conversationCollection &&
+            (await conversationCollection.findOne(
+                {
+                    _id: parseToObjectId(conversationId),
+                },
+                {
+                    projection: {
+                        _id: 1,
+                        messages: 1,
+                    },
+                }
+            ))
+
+        return conversation && conversation.messages
+    }
+    async listAllConversations(
+        userId: string
+    ): Promise<IConversationPreview[]> {
+        const conversationCollection =
+            MongoHelper.getCollection("conversations")
+        const conversations =
+            conversationCollection &&
+            (await conversationCollection
+                .find({
+                    ownerId: userId,
+                })
+                .toArray())
+
+        return conversations.map(conversation => MongoHelper.map(conversation))
+    }
+    async getById(id: string): Promise<IConversation | null> {
         throw new Error("Method not implemented.")
     }
-    listAllConversations(userId: string): Promise<IConversationPreview[]> {
+    async removeUserId(
+        userId: string,
+        conversationId: string
+    ): Promise<boolean> {
         throw new Error("Method not implemented.")
     }
-    getById(id: string): Promise<IConversation | null> {
+    async listUserIds(conversationId: string): Promise<string[]> {
         throw new Error("Method not implemented.")
     }
-    removeUserId(userId: string, conversationId: string): Promise<boolean> {
+    async saveMessage(message: IAddMessageModel): Promise<boolean> {
         throw new Error("Method not implemented.")
     }
-    listUserIds(conversationId: string): Promise<string[]> {
+    async getMessageById(messageId: string): Promise<IMessage | null> {
         throw new Error("Method not implemented.")
     }
-    saveMessage(message: IAddMessageModel): Promise<boolean> {
-        throw new Error("Method not implemented.")
-    }
-    getMessageById(messageId: string): Promise<IMessage | null> {
-        throw new Error("Method not implemented.")
-    }
-    removeMessageContent(messageId: string): Promise<boolean> {
+    async removeMessageContent(messageId: string): Promise<boolean> {
         throw new Error("Method not implemented.")
     }
 }
