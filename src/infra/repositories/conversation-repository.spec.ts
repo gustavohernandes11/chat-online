@@ -147,4 +147,16 @@ describe("Conversation MongoDB Repository", () => {
             expect(conversation).toBeNull()
         })
     })
+    describe("listUserIds", () => {
+        it("should list all the conversation user ids", async () => {
+            const { sut } = makeSut()
+            const conversationId = await sut.save(
+                makeFakeConversation({ userIds: ["1", "2", "3"] })
+            )
+
+            const ids = await sut.listUserIds(conversationId)
+
+            expect(ids).toEqual(["1", "2", "3"])
+        })
+    })
 })
