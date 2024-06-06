@@ -75,7 +75,13 @@ export class ConversationMongoRepository implements IConversationRepository {
         return conversations.map(conversation => MongoHelper.map(conversation))
     }
     async getById(id: string): Promise<IConversation | null> {
-        throw new Error("Method not implemented.")
+        const conversationCollection =
+            MongoHelper.getCollection("conversations")
+        const conversation =
+            conversationCollection &&
+            (await conversationCollection.findOne({ _id: parseToObjectId(id) }))
+
+        return conversation && MongoHelper.map(conversation)
     }
     async removeUserId(
         userId: string,
