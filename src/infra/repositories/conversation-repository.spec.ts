@@ -66,4 +66,21 @@ describe("Conversation MongoDB Repository", () => {
             expect(wasRemoved).toBe(true)
         })
     })
+    describe("checkById", () => {
+        it("should return true when the conversation exists", async () => {
+            const { sut } = makeSut()
+            const insertedId = await sut.save(makeFakeAddConversationModel())
+
+            const exists = await sut.checkById(insertedId)
+
+            expect(exists).toBe(true)
+        })
+        it("should return false when the conversation don't exists", async () => {
+            const { sut } = makeSut()
+
+            const exists = await sut.checkById("nonexistent_id")
+
+            expect(exists).toBe(false)
+        })
+    })
 })
