@@ -6,6 +6,7 @@ import {
 import { IAddMessageModel, IMessage } from "@/domain/models/message"
 import { IConversationRepository } from "@/domain/repositories-interfaces/conversation-repository"
 import { MongoHelper } from "../utils/mongo-helper"
+import { parseToObjectId } from "../utils/parse-to-object-id"
 
 export class ConversationMongoRepository implements IConversationRepository {
     async save(conversation: IAddConversationModel): Promise<string> {
@@ -17,8 +18,16 @@ export class ConversationMongoRepository implements IConversationRepository {
 
         return insertedId.toString()
     }
-    remove(id: string): Promise<boolean> {
-        throw new Error("Method not implemented.")
+    async remove(id: string): Promise<boolean> {
+        const conversationCollection =
+            MongoHelper.getCollection("conversations")
+        const { acknowledged } =
+            conversationCollection &&
+            (await conversationCollection.deleteOne({
+                _id: parseToObjectId(id),
+            }))
+
+        return acknowledged
     }
     checkById(id: string): Promise<boolean> {
         throw new Error("Method not implemented.")
