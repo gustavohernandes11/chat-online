@@ -159,4 +159,42 @@ describe("Conversation MongoDB Repository", () => {
             expect(ids).toEqual(["1", "2", "3"])
         })
     })
+    describe("removeUserId", () => {
+        it("should remove only the passed user id from the conversation", async () => {
+            const { sut } = makeSut()
+            const conversationId = await sut.save(
+                makeFakeConversation({ userIds: ["1", "2", "3"] })
+            )
+
+            await sut.removeUserId("2", conversationId)
+            const ids = await sut.listUserIds(conversationId)
+
+            expect(ids).toContain("1")
+            expect(ids).not.toContain("2")
+            expect(ids).toContain("3")
+        })
+        it("should return true on success", async () => {
+            const { sut } = makeSut()
+            const conversationId = await sut.save(
+                makeFakeConversation({ userIds: ["1"] })
+            )
+
+            const acknowledged = await sut.removeUserId("1", conversationId)
+
+            expect(acknowledged).toBe(true)
+        })
+        it("should return false when no id was found", async () => {
+            const { sut } = makeSut()
+            const conversationId = await sut.save(
+                makeFakeConversation({ userIds: [] })
+            )
+
+            const acknowledged = await sut.removeUserId(
+                "nonexistent_id",
+                conversationId
+            )
+
+            expect(acknowledged).toBe(false)
+        })
+    })
 })
