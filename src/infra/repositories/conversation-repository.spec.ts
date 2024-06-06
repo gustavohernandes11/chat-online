@@ -116,4 +116,35 @@ describe("Conversation MongoDB Repository", () => {
             expect(userConversations.length).toBe(3)
         })
     })
+    describe("getById", () => {
+        it("should return the correct conversation by id", async () => {
+            const { sut } = makeSut()
+            const { insertedIds } = await conversationCollection.insertMany([
+                makeFakeConversation({ name: "first_conversation" }),
+                makeFakeConversation({ name: "second_conversation" }),
+                makeFakeConversation({ name: "third_conversation" }),
+            ])
+
+            const firstConversation = await sut.getById(
+                insertedIds[0].toString()
+            )
+            const secondConversation = await sut.getById(
+                insertedIds[1].toString()
+            )
+            const thirdConversation = await sut.getById(
+                insertedIds[2].toString()
+            )
+
+            expect(firstConversation?.name).toBe("first_conversation")
+            expect(secondConversation?.name).toBe("second_conversation")
+            expect(thirdConversation?.name).toBe("third_conversation")
+        })
+        it("should return null if the conversations doesn't exists", async () => {
+            const { sut } = makeSut()
+
+            const conversation = await sut.getById("unexistent_id")
+
+            expect(conversation).toBeNull()
+        })
+    })
 })
