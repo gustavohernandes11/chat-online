@@ -29,8 +29,16 @@ export class ConversationMongoRepository implements IConversationRepository {
 
         return acknowledged
     }
-    checkById(id: string): Promise<boolean> {
-        throw new Error("Method not implemented.")
+    async checkById(id: string): Promise<boolean> {
+        const conversationCollection =
+            MongoHelper.getCollection("conversations")
+        const conversation =
+            conversationCollection &&
+            (await conversationCollection.findOne({
+                _id: parseToObjectId(id),
+            }))
+
+        return conversation !== null
     }
     listAllMessages(conversationId: string): Promise<IMessage[] | null> {
         throw new Error("Method not implemented.")
