@@ -6,7 +6,8 @@ export interface IInvitationRepository
         ICheckInvitationByIdRepository,
         IUpdateInvitationStatusRepository,
         IGetInvitationRepository,
-        IListUserInvitations {}
+        IListUserInvitations,
+        IListConversationInvitations {}
 
 export type ISaveInvitationRepository = {
     save(invite: IAddInvitationModel): Promise<string | null>
@@ -30,4 +31,8 @@ export type IGetInvitationRepository = {
 
 export type IListUserInvitations = {
     listUserInvitations(userId: string): Promise<IInvite[]>
+}
+
+export type IListConversationInvitations = {
+    listConversationInvitations(conversationId: string): Promise<IInvite[]>
 }

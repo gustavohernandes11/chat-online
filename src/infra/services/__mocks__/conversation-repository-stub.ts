@@ -45,7 +45,7 @@ export class ConversationRepositoryStub implements IConversationRepository {
         return true
     }
 
-    async getById(id: string): Promise<IConversation> {
+    async getById(id: string): Promise<IConversation | null> {
         return makeFakeConversation({ id })
     }
 

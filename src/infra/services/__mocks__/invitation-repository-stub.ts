@@ -7,6 +7,15 @@ import { IInvitationRepository } from "@/domain/repositories-interfaces/invitati
 import { makeFakeInvite } from "./testing-factories"
 
 export class InvitationRepositoryStub implements IInvitationRepository {
+    async listConversationInvitations(
+        conversationId: string
+    ): Promise<IInvite[]> {
+        return [
+            makeFakeInvite({ id: "1", conversationId }),
+            makeFakeInvite({ id: "2", conversationId }),
+            makeFakeInvite({ id: "3", conversationId }),
+        ]
+    }
     async save(invite: IAddInvitationModel): Promise<string | null> {
         const insertedId = "123"
         return insertedId
