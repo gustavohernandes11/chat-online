@@ -3,27 +3,12 @@ import {
     IAddAccountModel,
     IAuthenticatedAccountInfo,
 } from "@/domain/models/account"
-import {
-    IAddNewAccountRepository,
-    ICheckAccountByEmailRepository,
-    ICheckAccountByIdRepository,
-    IGetAccountByEmailRepository,
-    IGetAccountByTokenRepository,
-    IUpdateAccessTokenRepository,
-} from "@/domain/repositories-interfaces/account-repository"
+import { IAccountRepository } from "@/domain/repositories-interfaces/account-repository"
 import { ObjectId } from "mongodb"
 import { MongoHelper } from "../utils/mongo-helper"
 import { parseToObjectId } from "../utils/parse-to-object-id"
 
-export class AccountMongoRepository
-    implements
-        IGetAccountByTokenRepository,
-        IGetAccountByEmailRepository,
-        IUpdateAccessTokenRepository,
-        IAddNewAccountRepository,
-        ICheckAccountByIdRepository,
-        ICheckAccountByEmailRepository
-{
+export class AccountMongoRepository implements IAccountRepository {
     constructor() {}
     async checkByEmail(email: string): Promise<boolean> {
         const accountCollection = MongoHelper.getCollection("accounts")
