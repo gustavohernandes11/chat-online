@@ -43,4 +43,27 @@ describe("Conversation MongoDB Repository", () => {
             expect(recentlyAddedConversation).toBeTruthy()
         })
     })
+    describe("remove", () => {
+        it("should remove the conversation from the database", async () => {
+            const { sut } = makeSut()
+            const insertedId = await sut.save(makeFakeAddConversationModel())
+
+            await sut.remove(insertedId)
+
+            const removedConversation = await conversationCollection.findOne({
+                _id: parseToObjectId(insertedId),
+            })
+
+            expect(removedConversation).toBeNull()
+        })
+
+        it("should return true when remove the conversation correctly", async () => {
+            const { sut } = makeSut()
+            const insertedId = await sut.save(makeFakeAddConversationModel())
+
+            const wasRemoved = await sut.remove(insertedId)
+
+            expect(wasRemoved).toBe(true)
+        })
+    })
 })
