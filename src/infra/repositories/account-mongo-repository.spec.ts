@@ -1,18 +1,7 @@
-import { IAddAccountModel } from "@/domain/models/account"
 import { Collection } from "mongodb"
 import { MongoHelper } from "../utils/mongo-helper"
+import { makeFakeAccountModel } from "./__mocks__/repository-testing-factories"
 import { AccountMongoRepository } from "./account-mongo-repository"
-
-export const mockAccountModel = (override?: any): IAddAccountModel => {
-    return Object.assign(
-        {
-            name: "any_name",
-            email: "any_email@/gmail.com",
-            password: "any_hashed_password",
-        },
-        override || {}
-    ) as IAddAccountModel
-}
 
 describe("Account Mongo Repository", () => {
     let accountCollection: Collection
@@ -42,7 +31,7 @@ describe("Account Mongo Repository", () => {
     describe("add()", () => {
         it("should return true if the account is added", async () => {
             const { sut } = makeSut()
-            const sucess = await sut.addNewAccount(mockAccountModel())
+            const sucess = await sut.addNewAccount(makeFakeAccountModel())
             expect(sucess).toBe(true)
         })
     })
@@ -50,9 +39,11 @@ describe("Account Mongo Repository", () => {
         it("should load the correct account by email", async () => {
             const { sut } = makeSut()
             await sut.addNewAccount(
-                mockAccountModel({ email: "johndoe@gmail.com" })
+                makeFakeAccountModel({ email: "johndoe@gmail.com" })
             )
+
             const account = await sut.getAccountByEmail("johndoe@gmail.com")
+
             expect(account).not.toBeNull()
             expect(account?.id).toBeTruthy()
             expect(account?.name).toBe("any_name")
@@ -68,7 +59,7 @@ describe("Account Mongo Repository", () => {
         it("should set or update the accessToken in the database", async () => {
             const { sut } = makeSut()
             const { insertedId } = await accountCollection.insertOne(
-                mockAccountModel()
+                makeFakeAccountModel()
             )
             const fakeAccount = await accountCollection.findOne({
                 _id: insertedId,
@@ -98,7 +89,7 @@ describe("Account Mongo Repository", () => {
         it("should return true if the account exists", async () => {
             const { sut } = makeSut()
             await sut.addNewAccount(
-                mockAccountModel({
+                makeFakeAccountModel({
                     email: "any_email@gmail.com",
                 })
             )
@@ -115,7 +106,7 @@ describe("Account Mongo Repository", () => {
         it("should return true if the account exists", async () => {
             const { sut } = makeSut()
             const { insertedId } = await accountCollection.insertOne(
-                mockAccountModel()
+                makeFakeAccountModel()
             )
 
             const response = await sut.checkById(insertedId.toHexString())
@@ -124,7 +115,7 @@ describe("Account Mongo Repository", () => {
         it("should work with a string as id", async () => {
             const { sut } = makeSut()
             const { insertedId } = await accountCollection.insertOne(
-                mockAccountModel()
+                makeFakeAccountModel()
             )
 
             const response = await sut.checkById(insertedId.toHexString())
@@ -137,7 +128,7 @@ describe("Account Mongo Repository", () => {
             const { sut } = makeSut()
 
             const { insertedId } = await accountCollection.insertOne(
-                mockAccountModel({ accessToken: "any_access_token" })
+                makeFakeAccountModel({ accessToken: "any_access_token" })
             )
             const response = await sut.getAccountByToken("any_access_token")
 
@@ -148,9 +139,9 @@ describe("Account Mongo Repository", () => {
             const { sut } = makeSut()
 
             const { insertedId } = await accountCollection.insertOne(
-                mockAccountModel({
+                makeFakeAccountModel({
                     accessToken: "any_access_token",
-                    role: "admin",
+                    role: ["admin"],
                 })
             )
             const account = await sut.getAccountByToken(
@@ -163,7 +154,7 @@ describe("Account Mongo Repository", () => {
             const { sut } = makeSut()
 
             await accountCollection.insertOne(
-                mockAccountModel({
+                makeFakeAccountModel({
                     accessToken: "any_access_token",
                     role: undefined,
                 })
@@ -178,9 +169,9 @@ describe("Account Mongo Repository", () => {
             const { sut } = makeSut()
 
             await accountCollection.insertOne(
-                mockAccountModel({
+                makeFakeAccountModel({
                     accessToken: "any_access_token",
-                    role: "admin",
+                    role: ["admin"],
                 })
             )
             const account = await sut.getAccountByToken("any_access_token")
@@ -190,9 +181,9 @@ describe("Account Mongo Repository", () => {
             const { sut } = makeSut()
 
             await accountCollection.insertOne(
-                mockAccountModel({
+                makeFakeAccountModel({
                     accessToken: "any_access_token",
-                    role: "admin",
+                    role: ["admin"],
                 })
             )
             const account = await sut.getAccountByToken("INVALID_access_token")
