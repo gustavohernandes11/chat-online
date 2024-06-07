@@ -5,6 +5,7 @@ import { parseToObjectId } from "../utils/parse-to-object-id"
 import {
     makeFakeAddConversationModel,
     makeFakeConversation,
+    makeFakeMessage,
 } from "./__mocks__/repository-testing-factories"
 import { ConversationMongoRepository } from "./conversation-repository"
 
@@ -195,6 +196,54 @@ describe("Conversation MongoDB Repository", () => {
             )
 
             expect(acknowledged).toBe(false)
+        })
+    })
+    describe("saveMessage", () => {
+        it("should save the message in the database", async () => {
+            const { sut } = makeSut()
+            const { insertedId } = await conversationCollection.insertOne(
+                makeFakeConversation({ messages: [] })
+            )
+
+            await sut.saveMessage(
+                makeFakeMessage({
+                    conversationId: insertedId.toString(),
+                    content: "any_content",
+                })
+            )
+
+            const firstConversation = await sut.getById(insertedId.toString())
+
+            expect(firstConversation?.messages.length).toBe(1)
+        })
+        it("should save the message in the correct conversation", async () => {
+            const { sut } = makeSut()
+            const conversations = [
+                makeFakeConversation({ messages: [] }),
+                makeFakeConversation({ messages: [] }),
+                makeFakeConversation({ messages: [] }),
+            ]
+            const { insertedIds } = await conversationCollection.insertMany(
+                conversations
+            )
+
+            await sut.saveMessage(
+                makeFakeMessage({
+                    conversationId: insertedIds[1].toString(),
+                    content: "any_content",
+                })
+            )
+
+            const [firstConversation, secondConversation, thirdConversation] =
+                await Promise.all([
+                    sut.getById(insertedIds[0].toString()),
+                    sut.getById(insertedIds[1].toString()),
+                    sut.getById(insertedIds[2].toString()),
+                ])
+
+            expect(firstConversation?.messages.length).toBe(0)
+            expect(secondConversation?.messages.length).toBe(1)
+            expect(thirdConversation?.messages.length).toBe(0)
         })
     })
 })
