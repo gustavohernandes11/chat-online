@@ -3,6 +3,7 @@ import {
     IAddConversationModel,
     IConversation,
 } from "@/domain/models/conversation"
+import { IMessage } from "@/domain/models/message"
 
 export const makeFakeAddConversationModel = (
     override?: IAddConversationModel
@@ -19,10 +20,11 @@ export const makeFakeAddConversationModel = (
 }
 
 export const makeFakeConversation = (
-    override?: Partial<Omit<IConversation, "id">>
-): Omit<IConversation, "id"> => {
+    override?: Partial<IConversation>
+): IConversation => {
     return Object.assign(
         {
+            id: "1",
             createdAt: new Date().toISOString(),
             description: "any_description",
             invitationCode: 123,
@@ -55,5 +57,18 @@ export const makeFakeAccountModel = (
             password: "any_hashed_password",
         },
         override
+    )
+}
+
+export const makeFakeMessage = (overide?: Partial<IMessage>): IMessage => {
+    return Object.assign(
+        {
+            id: "any_id",
+            conversationId: "1",
+            senderId: "2",
+            content: "any_content",
+            date: new Date().toISOString(),
+        },
+        overide
     )
 }

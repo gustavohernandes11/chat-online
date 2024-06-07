@@ -122,7 +122,20 @@ export class ConversationMongoRepository implements IConversationRepository {
         return modifiedCount > 0
     }
     async saveMessage(message: IAddMessageModel): Promise<boolean> {
-        throw new Error("Method not implemented.")
+        const conversationCollection =
+            MongoHelper.getCollection("conversations")
+
+        const { modifiedCount } =
+            conversationCollection &&
+            (await conversationCollection.updateOne(
+                {
+                    _id: parseToObjectId(message.conversationId),
+                },
+                // @ts-ignore
+                { $push: { messages: message } }
+            ))
+
+        return modifiedCount > 0
     }
     async getMessageById(messageId: string): Promise<IMessage | null> {
         throw new Error("Method not implemented.")
