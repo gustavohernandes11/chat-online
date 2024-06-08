@@ -7,7 +7,7 @@ import {
     makeFakeConversation,
     makeFakeMessage,
 } from "./__mocks__/repository-testing-factories"
-import { ConversationMongoRepository } from "./conversation-repository"
+import { ConversationMongoRepository } from "./conversation-mongo-repository"
 
 describe("Conversation MongoDB Repository", () => {
     let conversationCollection: Collection
