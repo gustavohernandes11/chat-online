@@ -62,5 +62,8 @@ export type IGetMessageByIdRepository = {
 }
 
 export type IRemoveMessageContentRepository = {
-    removeMessageContent(messageId: string): Promise<boolean>
+    removeMessageContent(
+        messageId: string,
+        conversationId: string
+    ): Promise<boolean>
 }

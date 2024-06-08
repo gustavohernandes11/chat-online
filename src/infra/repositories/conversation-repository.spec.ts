@@ -278,4 +278,69 @@ describe("Conversation MongoDB Repository", () => {
             expect(message?.content).toBe("I'm the target message")
         })
     })
+    describe("removeMessageContent", () => {
+        it("should remove the target message content", async () => {
+            const { sut } = makeSut()
+            const conversation = makeFakeConversation({ messages: [] })
+            const { insertedId } = await conversationCollection.insertOne(
+                conversation
+            )
+
+            const messageId = new ObjectId()
+            await sut.saveMessage(
+                makeFakeMessage({
+                    _id: messageId,
+                    conversationId: insertedId.toString(),
+                    content: "Please, kill me, I'm the target message.",
+                })
+            )
+
+            const wasRemoved = await sut.removeMessageContent(
+                messageId.toString(),
+                insertedId.toString()
+            )
+            const message = await sut.getMessageById(
+                messageId.toString(),
+                insertedId.toString()
+            )
+
+            expect(messageId).not.toBeNull()
+            expect(wasRemoved).toBe(true)
+            expect(message!.content).toBe(null)
+        })
+        it("should not update other messages", async () => {
+            const { sut } = makeSut()
+            const conversation = makeFakeConversation({ messages: [] })
+            const { insertedId } = await conversationCollection.insertOne(
+                conversation
+            )
+            const targetId = new ObjectId()
+            const notTargetId = new ObjectId()
+            await sut.saveMessage(
+                makeFakeMessage({
+                    _id: notTargetId,
+                    conversationId: insertedId.toString(),
+                    content: "I should not be affected.",
+                })
+            )
+            await sut.saveMessage(
+                makeFakeMessage({
+                    _id: targetId,
+                    conversationId: insertedId.toString(),
+                    content: "Please, kill me, I'm the target message.",
+                })
+            )
+            sut.removeMessageContent(targetId.toString(), insertedId.toString())
+
+            const [target, notTarget] = await Promise.all([
+                sut.getMessageById(targetId.toString(), insertedId.toString()),
+                sut.getMessageById(
+                    notTargetId.toString(),
+                    insertedId.toString()
+                ),
+            ])
+            expect(target!.content).toBe(null)
+            expect(notTarget!.content).toBe("I should not be affected.")
+        })
+    })
 })

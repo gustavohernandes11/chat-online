@@ -191,7 +191,25 @@ export class ConversationMongoRepository implements IConversationRepository {
 
         return (message as IMessage) || null
     }
-    async removeMessageContent(messageId: string): Promise<boolean> {
-        throw new Error("Method not implemented.")
+    async removeMessageContent(
+        messageId: string,
+        conversationId: string
+    ): Promise<boolean> {
+        const conversationCollection =
+            MongoHelper.getCollection("conversations")
+
+        const { modifiedCount } =
+            conversationCollection &&
+            (await conversationCollection.updateOne(
+                {
+                    _id: parseToObjectId(conversationId),
+                    "messages._id": parseToObjectId(messageId),
+                },
+                {
+                    $set: { "messages.$.content": null },
+                }
+            ))
+
+        return !!modifiedCount
     }
 }
