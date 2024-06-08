@@ -156,11 +156,16 @@ describe("MessageServices", () => {
             const { sut, accountRepositoryStub } = makeSut()
             const userId = "invalid_user_id"
             const messageId = "message_id"
+            const conversationId = "message_id"
             jest.spyOn(accountRepositoryStub, "checkById").mockResolvedValue(
                 false
             )
 
-            const response = await sut.removeMessage(userId, messageId)
+            const response = await sut.removeMessage(
+                userId,
+                messageId,
+                conversationId
+            )
 
             expect(response).toBe(false)
         })
@@ -169,12 +174,18 @@ describe("MessageServices", () => {
             const { sut, conversationRepositoryStub } = makeSut()
             const userId = "user_id"
             const messageId = "invalid_message_id"
+            const conversationId = "message_id"
+
             jest.spyOn(
                 conversationRepositoryStub,
                 "getMessageById"
             ).mockResolvedValue(null)
 
-            const response = await sut.removeMessage(userId, messageId)
+            const response = await sut.removeMessage(
+                userId,
+                messageId,
+                conversationId
+            )
 
             expect(response).toBe(false)
         })
@@ -183,9 +194,10 @@ describe("MessageServices", () => {
             const { sut, accountRepositoryStub } = makeSut()
             const userId = "user_id"
             const messageId = "message_id"
+            const conversationId = "message_id"
             const checkByIdSpy = jest.spyOn(accountRepositoryStub, "checkById")
 
-            await sut.removeMessage(userId, messageId)
+            await sut.removeMessage(userId, messageId, conversationId)
 
             expect(checkByIdSpy).toHaveBeenCalledWith(userId)
         })
@@ -194,12 +206,13 @@ describe("MessageServices", () => {
             const { sut, conversationRepositoryStub } = makeSut()
             const userId = "user_id"
             const messageId = "message_id"
+            const conversationId = "message_id"
             const getMessageByIdSpy = jest.spyOn(
                 conversationRepositoryStub,
                 "getMessageById"
             )
 
-            await sut.removeMessage(userId, messageId)
+            await sut.removeMessage(userId, messageId, conversationId)
 
             expect(getMessageByIdSpy).toHaveBeenCalledWith(messageId)
         })
@@ -208,8 +221,13 @@ describe("MessageServices", () => {
             const { sut } = makeSut()
             const userId = "user_id"
             const messageId = "message_id"
+            const conversationId = "message_id"
 
-            const response = await sut.removeMessage(userId, messageId)
+            const response = await sut.removeMessage(
+                userId,
+                messageId,
+                conversationId
+            )
 
             expect(response).toBe(true)
         })
@@ -218,12 +236,17 @@ describe("MessageServices", () => {
             const { sut, conversationRepositoryStub } = makeSut()
             const userId = "user_id"
             const messageId = "message_id"
+            const conversationId = "message_id"
             jest.spyOn(
                 conversationRepositoryStub,
                 "removeMessageContent"
             ).mockResolvedValue(false)
 
-            const response = await sut.removeMessage(userId, messageId)
+            const response = await sut.removeMessage(
+                userId,
+                messageId,
+                conversationId
+            )
 
             expect(response).toBe(false)
         })

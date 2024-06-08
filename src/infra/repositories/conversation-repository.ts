@@ -5,6 +5,7 @@ import {
 } from "@/domain/models/conversation"
 import { IAddMessageModel, IMessage } from "@/domain/models/message"
 import { IConversationRepository } from "@/domain/repositories-interfaces/conversation-repository"
+import { ObjectId } from "mongodb"
 import { MongoHelper } from "../utils/mongo-helper"
 import { parseToObjectId } from "../utils/parse-to-object-id"
 
@@ -121,24 +122,74 @@ export class ConversationMongoRepository implements IConversationRepository {
 
         return modifiedCount > 0
     }
-    async saveMessage(message: IAddMessageModel): Promise<boolean> {
+    async saveMessage(message: IAddMessageModel): Promise<string | null> {
         const conversationCollection =
             MongoHelper.getCollection("conversations")
 
+        const messageId = new ObjectId()
         const { modifiedCount } =
             conversationCollection &&
             (await conversationCollection.updateOne(
                 {
                     _id: parseToObjectId(message.conversationId),
                 },
-                // @ts-ignore
-                { $push: { messages: message } }
+                {
+                    // @ts-ignore
+                    $push: {
+                        messages: {
+                            _id: messageId,
+                            date: new Date().toISOString(),
+                            ...message,
+                        },
+                    },
+                }
             ))
 
-        return modifiedCount > 0
+        return modifiedCount ? messageId.toString() : null
     }
-    async getMessageById(messageId: string): Promise<IMessage | null> {
-        throw new Error("Method not implemented.")
+    async getMessageById(
+        messageId: string,
+        conversationId: string
+    ): Promise<IMessage | null> {
+        const conversationCollection =
+            MongoHelper.getCollection("conversations")
+
+        const result = await conversationCollection
+            .aggregate([
+                {
+                    $match: {
+                        _id: parseToObjectId(conversationId),
+                        "messages._id": parseToObjectId(messageId),
+                    },
+                },
+                {
+                    $project: {
+                        messages: {
+                            $filter: {
+                                input: "$messages",
+                                as: "message",
+                                cond: {
+                                    $eq: [
+                                        "$$message._id",
+                                        parseToObjectId(messageId),
+                                    ],
+                                },
+                            },
+                        },
+                    },
+                },
+                {
+                    $unwind: "$messages",
+                },
+                {
+                    $replaceRoot: { newRoot: "$messages" },
+                },
+            ])
+            .toArray()
+
+        const message = result.length > 0 ? result[0] : null
+
+        return (message as IMessage) || null
     }
     async removeMessageContent(messageId: string): Promise<boolean> {
         throw new Error("Method not implemented.")

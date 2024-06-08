@@ -40,11 +40,15 @@ export class MessageServices implements IMessageServices {
     }
     async removeMessage(
         requesterId: string,
-        messageId: string
+        messageId: string,
+        conversationId: string
     ): Promise<boolean> {
         const [userExists, message] = await Promise.all([
             this.accountRepository.checkById(requesterId),
-            this.conversationRepository.getMessageById(messageId),
+            this.conversationRepository.getMessageById(
+                messageId,
+                conversationId
+            ),
         ])
 
         if (userExists && message) {

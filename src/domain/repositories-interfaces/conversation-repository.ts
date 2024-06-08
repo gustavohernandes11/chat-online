@@ -51,11 +51,14 @@ export type IListUserIdsFromConversationRepository = {
 }
 
 export type IAddMessageRepository = {
-    saveMessage(message: IAddMessageModel): Promise<boolean>
+    saveMessage(message: IAddMessageModel): Promise<string | null>
 }
 
 export type IGetMessageByIdRepository = {
-    getMessageById(messageId: string): Promise<IMessage | null>
+    getMessageById(
+        messageId: string,
+        conversationId: string
+    ): Promise<IMessage | null>
 }
 
 export type IRemoveMessageContentRepository = {

@@ -20,8 +20,8 @@ export class ConversationRepositoryStub implements IConversationRepository {
         return true
     }
 
-    async saveMessage(message: IAddMessageModel): Promise<boolean> {
-        return true
+    async saveMessage(message: IAddMessageModel): Promise<string | null> {
+        return "123"
     }
 
     async listUserIds(conversationId: string): Promise<string[]> {

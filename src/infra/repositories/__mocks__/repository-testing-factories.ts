@@ -4,6 +4,7 @@ import {
     IConversation,
 } from "@/domain/models/conversation"
 import { IMessage } from "@/domain/models/message"
+import { ObjectId } from "mongodb"
 
 export const makeFakeAddConversationModel = (
     override?: IAddConversationModel
@@ -60,7 +61,9 @@ export const makeFakeAccountModel = (
     )
 }
 
-export const makeFakeMessage = (overide?: Partial<IMessage>): IMessage => {
+export const makeFakeMessage = (
+    overide?: Partial<IMessage> | { _id: ObjectId }
+): IMessage => {
     return Object.assign(
         {
             id: "any_id",

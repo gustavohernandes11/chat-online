@@ -11,5 +11,9 @@ export type ISendMessageService = {
 }
 
 export type IRemoveMessageService = {
-    removeMessage(requesterId: string, messageId: string): Promise<boolean>
+    removeMessage(
+        requesterId: string,
+        messageId: string,
+        conversationId: string
+    ): Promise<boolean>
 }

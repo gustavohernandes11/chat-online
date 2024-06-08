@@ -1,5 +1,5 @@
 import { IConversationRepository } from "@/domain/repositories-interfaces/conversation-repository"
-import { Collection } from "mongodb"
+import { Collection, ObjectId } from "mongodb"
 import { MongoHelper } from "../utils/mongo-helper"
 import { parseToObjectId } from "../utils/parse-to-object-id"
 import {
@@ -244,6 +244,38 @@ describe("Conversation MongoDB Repository", () => {
             expect(firstConversation?.messages.length).toBe(0)
             expect(secondConversation?.messages.length).toBe(1)
             expect(thirdConversation?.messages.length).toBe(0)
+        })
+    })
+    describe("getMessageById", () => {
+        it("should get the correct message", async () => {
+            const { sut } = makeSut()
+            const targetId = new ObjectId()
+            const conversations = [
+                makeFakeConversation({
+                    messages: [
+                        makeFakeMessage({
+                            _id: targetId,
+                            content: "I'm the target message",
+                        }),
+                        makeFakeMessage({
+                            _id: new ObjectId(),
+                        }),
+                        makeFakeMessage({
+                            _id: new ObjectId(),
+                        }),
+                    ],
+                }),
+                makeFakeConversation(),
+            ]
+            const { insertedIds } = await conversationCollection.insertMany(
+                conversations
+            )
+            const message = await sut.getMessageById(
+                targetId.toString(),
+                insertedIds[0].toString()
+            )
+
+            expect(message?.content).toBe("I'm the target message")
         })
     })
 })
