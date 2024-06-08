@@ -32,7 +32,7 @@ export class MessageServices implements IMessageServices {
                     senderId,
                 }
 
-                return this.conversationRepository.saveMessage(message)
+                return !!this.conversationRepository.saveMessage(message)
             }
         }
 
@@ -52,7 +52,10 @@ export class MessageServices implements IMessageServices {
         ])
 
         if (userExists && message) {
-            return this.conversationRepository.removeMessageContent(messageId)
+            return this.conversationRepository.removeMessageContent(
+                messageId,
+                conversationId
+            )
         }
 
         return false

@@ -214,7 +214,10 @@ describe("MessageServices", () => {
 
             await sut.removeMessage(userId, messageId, conversationId)
 
-            expect(getMessageByIdSpy).toHaveBeenCalledWith(messageId)
+            expect(getMessageByIdSpy).toHaveBeenCalledWith(
+                messageId,
+                conversationId
+            )
         })
 
         it("should return true if the message is removed successfully", async () => {
